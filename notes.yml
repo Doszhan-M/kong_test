@@ -1,0 +1,13 @@
+admin
+admin@admin.admin
+adminadmin
+
+
+curl -s -X POST http://localhost:8001/services/e71c82d3-2e53-469b-9beb-a232a15f86d4/routes -d "paths[]=/mock"
+
+
+
+curl -s -X POST http://localhost:8001/services \
+    -d name=api-service \
+    -d url=http://localhost:3000 \
+    | jq

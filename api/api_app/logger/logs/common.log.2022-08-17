@@ -1,0 +1,8 @@
+15:37:15 - INFO -Started server process [9] (server.py:75)
+15:37:15 - INFO -Waiting for application startup. (on.py:45)
+15:37:15 - INFO -Application startup complete. (on.py:59)
+15:38:03 - INFO -Started server process [9] (server.py:75)
+15:38:03 - INFO -Waiting for application startup. (on.py:45)
+15:38:03 - INFO -Application startup complete. (on.py:59)
+15:38:12 - INFO -172.21.0.1:41192 - "GET /docs HTTP/1.1" 200 (httptools_impl.py:437)
+15:38:13 - INFO -172.21.0.1:41192 - "GET /openapi.json HTTP/1.1" 200 (httptools_impl.py:437)

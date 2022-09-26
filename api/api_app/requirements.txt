@@ -1,0 +1,6 @@
+colorlog == 6.6.0
+fastapi[all]==0.75.2
+gunicorn==20.1.0 
+pygelf==0.4.2
+requests==2.27.1
+xmltodict==0.12.0
