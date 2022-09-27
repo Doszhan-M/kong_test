@@ -11,3 +11,6 @@ curl -s -X POST http://localhost:8001/services \
     -d name=api-service \
     -d url=http://localhost:3000 \
     | jq
+
+
+docker build -t kong-1 . -f kong/kong.dockerfile

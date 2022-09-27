@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   kong-database:
-    image: postgres:14.2
+    image: postgres:9.6
     container_name: kong-database
     ports:
       - 5432:5432
@@ -11,10 +11,10 @@ services:
       - POSTGRES_DB=kong
       - POSTGRES_PASSWORD=kong
     volumes:
-      - "kong_postgres:/var/lib/postgresql/data"
+      - "db-data-kong-postgres:/var/lib/postgresql/data"
 
   kong-migrations:
-    image: kong
+    image: registry.gitlab.com/uchet.kz/pk/deploy/dev/kong:latest
     environment:
       - KONG_DATABASE=postgres
       - KONG_PG_HOST=kong-database
@@ -26,9 +26,9 @@ services:
       - kong-database
 
   kong:
-    build:
-      context: ./kong
-      dockerfile: ./kong.dockerfile
+    # image: kong-1
+    image: registry.gitlab.com/uchet.kz/pk/deploy/dev/kong:latest
+    container_name: kong
     environment:
       - LC_CTYPE=en_US.UTF-8
       - LC_ALL=en_US.UTF-8
@@ -50,10 +50,10 @@ services:
     ports:
       # - 8000:8000
       - 8443:8443
-      - 8050:8001
+      - 8001:8001
       - 8444:8444
-    links:
-      - kong-database:kong-database
+    # links:
+    #   - kong-database:kong-database
     depends_on:
       - kong-migrations
     volumes:
@@ -77,7 +77,7 @@ services:
       - NODE_ENV=production
 
 volumes:
-  kong_postgres:
+  db-data-kong-postgres:
   konga_data:
 
 
