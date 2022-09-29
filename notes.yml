@@ -2,15 +2,83 @@ admin
 admin@admin.admin
 adminadmin
 
-
-curl -s -X POST http://localhost:8001/services/e71c82d3-2e53-469b-9beb-a232a15f86d4/routes -d "paths[]=/mock"
-
-
-
-curl -s -X POST http://localhost:8001/services \
-    -d name=api-service \
-    -d url=http://localhost:3000 \
-    | jq
+docker pull revomatico/docker-kong-oidc:3.0.0-5
+docker build -t kong-1.3.0-3 . -f ./kong/kong.dockerfile 
 
 
-docker build -t kong-1 . -f kong/kong.dockerfile
+service:
+    curl -s -X POST http://localhost:8001/services \
+        -d name=pk_backend \
+        -d url=http://pk_backend:8000 \
+        -d path=/api/web/accounts \
+        | jq
+
+route:
+    curl -s -X POST http://localhost:8001/services/5fb44498-bd21-4819-9299-60816b74282a/routes -d "paths[]=/api/web/accounts/" \
+        | jq
+
+CLIENT_SECRET=4aHDNQL~~bTYVoGCz1jQECE_O3
+CLIENT_ID=pk2-test
+HOST_IP=127.0.0.1
+HOST_PORT=8001
+
+curl -s -X POST http://localhost:8001/plugins \
+  -d name=oidc \
+  -d config.client_id=${CLIENT_ID} \
+  -d config.client_secret=${CLIENT_SECRET} \
+  -d config.bearer_only=yes \
+  -d config.discovery=https://id.uchet.kz/.idp/.well-known/openid-configuration \
+  -d config.token_endpoint_auth_method=client_secret_basic \
+  -d config.scope=offline_access+offline+openid \
+  -d route.id=4d042040-0a44-4b2c-baeb-6430ff3c08d4   \
+   | jq
+
+  -d config.redirect_uri=https://pk-local.backend/api/web/accounts/sso_token/ \
+
+curl -s -X POST http://localhost:8001/plugins \
+  -d name=oidc \
+  -d config.client_id=${CLIENT_ID} \
+  -d config.client_secret=${CLIENT_SECRET} \
+  -d config.bearer_only=yes \
+  -d config.discovery=https://id.uchet.kz/.idp/.well-known/openid-configuration  \
+  -d config.redirect_uri_path=https://pk-local.backend/api/web/accounts/sso_token/ \
+  -d config.token_endpoint_auth_method=client_secret_basic \
+  -d config.scope=offline_access+offline+openid \
+  | jq
+
+
+  {
+  "consumer": null,
+  "tags": null,
+  "name": "oidc",
+  "enabled": true,
+  "route": null,
+  "protocols": [
+    "grpc",
+    "grpcs",
+    "http",
+    "https"
+  ],
+  "config": {
+    "ssl_verify": "no",
+    "filters": null,
+    "response_type": "code",
+    "discovery": "http://127.0.0.1:8180/auth/realms/kong/.well-known/openid-configuration",
+    "introspection_endpoint": "http://127.0.0.1:8180/realms/kong/protocol/openid-connect/token/introspect",
+    "redirect_uri_path": null,
+    "token_endpoint_auth_method": "client_secret_post",
+    "realm": "kong",
+    "redirect_after_logout_uri": "/",
+    "recovery_page_path": null,
+    "bearer_only": "yes",
+    "scope": "openid",
+    "client_secret": "4aHDNQL~~bTYVoGCz1jQECE_O3",
+    "introspection_endpoint_auth_method": null,
+    "logout_path": "/logout",
+    "client_id": "kong",
+    "session_secret": null
+  },
+  "service": null,
+  "created_at": 1664454779,
+  "id": "03254863-b47f-4f18-9027-26b9820875ba"
+}
